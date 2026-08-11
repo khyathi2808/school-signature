@@ -635,6 +635,11 @@ function brochureInsightCard(ins){
 }
 
 function buildBrochureHtml(){
+  const growth = jan.map((v,i) => mar[i] - v);
+  const avgGrowth = (growth.reduce((a,g)=>a+g,0) / growth.length).toFixed(1);
+  const maxIdx = growth.indexOf(Math.max(...growth));
+  const minIdx = growth.indexOf(Math.min(...growth));
+  const execSummary = `Every one of the six areas the School Signature tracks grew between January and March — an average gain of ${avgGrowth} points. ${escapeHtml(labels[maxIdx])} grew the most, up ${growth[maxIdx]} points, while ${escapeHtml(labels[minIdx])} grew the least, up ${growth[minIdx]}. ${escapeHtml(insights[0].title)} remains the strongest area outright, and the three claims below are the ones most worth telling someone outside the school.`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -664,8 +669,10 @@ function buildBrochureHtml(){
   .b-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
   .b-intro h2{font-family:'Fraunces',serif;font-weight:500;font-size:28px;margin:0 0 10px;color:var(--ink-900);}
   .b-intro p{font-size:14.5px;color:var(--slate);max-width:640px;margin:0 auto;line-height:1.6;}
-  .b-section-title{display:flex;align-items:baseline;gap:10px;margin:44px 0 18px;}
+  .b-exec-summary{background:var(--card);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-800);margin:0 0 8px;}
+  .b-section-title{display:flex;align-items:baseline;gap:10px;margin:44px 0 4px;}
   .b-section-title h2{font-family:'Fraunces',serif;font-weight:500;font-size:20px;margin:0;color:var(--ink-900);}
+  .b-section-desc{font-size:13px;color:var(--slate);line-height:1.6;margin:0 0 18px;max-width:640px;}
   .b-card{background:var(--card);border-radius:14px;border-top:4px solid var(--rule);box-shadow:0 1px 2px rgba(16,27,51,.05), 0 8px 24px rgba(16,27,51,.06);padding:24px 26px 22px;margin-bottom:20px;}
   .b-card.gold{border-top-color:var(--gold);}
   .b-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
@@ -712,15 +719,20 @@ function buildBrochureHtml(){
     <p>The full School Signature — every one of the six competencies compared January to March, the three claims worth telling someone outside the school, and the article ready to publish.</p>
   </div>
 
+  <p class="b-exec-summary">${execSummary}</p>
+
   <div class="b-section-title"><h2>School Signature, Axis by Axis</h2></div>
+  <p class="b-section-desc">January versus March, for each of the six competencies the Signature tracks. The gold bar is where the school stands now; the growth in brackets is how far it moved this term.</p>
   <div class="b-card gold">
     ${labels.map((l,i) => brochureAxisRow(l, jan[i], mar[i])).join('')}
   </div>
 
   <div class="b-section-title"><h2>Three Claims Worth Telling</h2></div>
+  <p class="b-section-desc">The three data points from the chart above that are most worth repeating outside the school — to parents, prospective families, or the board.</p>
   ${insights.map(brochureInsightCard).join('')}
 
   <div class="b-section-title"><h2>Suggested Draft</h2></div>
+  <p class="b-section-desc">A ready-to-publish piece built from the three claims above — for the school blog, a newsletter, or LinkedIn.</p>
   <div class="b-article">
     <p class="b-headline">${escapeHtml(article.headline)}</p>
     <p>${escapeHtml(article.excerpt)}</p>
