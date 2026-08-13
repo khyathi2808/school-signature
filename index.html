@@ -979,10 +979,29 @@ document.addEventListener('click', (e) => {
 
 const pageLoadTime = Date.now();
 function sendTimeOnPage(){
+  flushMouseSamples(true);
   trackBeacon('time_on_page', {value: Math.round((Date.now() - pageLoadTime) / 1000)});
 }
 window.addEventListener('pagehide', sendTimeOnPage);
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') sendTimeOnPage(); });
+
+let mouseSamples = [];
+let lastMouseSampleTime = 0;
+function flushMouseSamples(useBeacon){
+  if(!mouseSamples.length) return;
+  const batch = mouseSamples;
+  mouseSamples = [];
+  const extra = {viewport: {w: window.innerWidth, h: window.innerHeight}, samples: batch};
+  if(useBeacon) trackBeacon('cursor_move', extra); else trackEvent('cursor_move', extra);
+}
+document.addEventListener('mousemove', (e) => {
+  const now = Date.now();
+  if(now - lastMouseSampleTime < 200) return;
+  lastMouseSampleTime = now;
+  mouseSamples.push({x: e.clientX, y: e.clientY, t: now - pageLoadTime});
+  if(mouseSamples.length >= 200) flushMouseSamples(false);
+});
+setInterval(() => flushMouseSamples(false), 10000);
 
 const droneOverlay = document.getElementById('droneOverlay');
 const droneForm = document.getElementById('droneForm');
