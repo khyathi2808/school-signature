@@ -316,13 +316,13 @@
 
   .dl-btn{
     display:inline-flex;align-items:center;gap:8px;
-    font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.04em;
+    font-family:'IBM Plex Mono',monospace;font-size:11.523px;letter-spacing:.04em;
     color:#fff;background:var(--ink-900);border:none;border-radius:8px;
-    padding:9px 16px;margin-top:16px;cursor:pointer;text-decoration:none;
+    padding:9.018px 16.032px;margin-top:16px;cursor:pointer;text-decoration:none;
     transition:background .15s ease;
   }
   .dl-btn:hover{background:#1E2E52;}
-  .dl-btn .dl-icon{font-size:13px;}
+  .dl-btn .dl-icon{font-size:13.026px;}
 
   /* ============ PULSE ALT: ACADEMIC CONTROL TOWER ============ */
   .pulse-sub{max-width:1180px;margin:0 auto 18px;text-align:center;}
@@ -952,6 +952,13 @@ function trackBeacon(eventName, extra){
 
 trackEvent('page_view');
 
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('button, a[href], [role="button"], input[type="submit"], input[type="button"]');
+  if(!el) return;
+  const label = (el.getAttribute('aria-label') || el.textContent || el.id || el.tagName || '').trim().replace(/\s+/g, ' ').slice(0, 80);
+  trackEvent('cta_click', {label, elementId: el.id || '', tag: el.tagName.toLowerCase()});
+});
+
 (function(){
   const milestones = [25, 50, 75, 100];
   const fired = {};
@@ -983,7 +990,6 @@ const droneStatus = document.getElementById('droneStatus');
 const droneSubmitBtn = document.getElementById('droneSubmitBtn');
 
 document.getElementById('dlDoc2').addEventListener('click', () => {
-  trackEvent('cta_click');
   droneOverlay.hidden = false;
   droneStatus.textContent = '';
   droneStatus.className = 'drona-modal-status';
