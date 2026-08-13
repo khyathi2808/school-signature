@@ -546,7 +546,6 @@
   </div>
   <div style="text-align:center;margin-bottom:34px;">
     <button type="button" class="dl-btn" id="dlDoc2"><span class="dl-icon">&#8681;</span> Download Report</button>
-    <a class="dl-btn" style="margin-left:10px;" href="assets/pdfs/School_Signature_Drona_Branded_.pdf" download="School_Signature_Drona_Branded_.pdf"><span class="dl-icon">&#8681;</span> Download PDF</a>
   </div>
 
 
@@ -921,6 +920,8 @@ function buildBrochureHtml(){
 
 const TRACKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTpgc26W31atjZaDKxp_LpxwN3nJM6bi-3udQrGmP_9o9On1Ac0zQUBlpE9JDYVxzY-g/exec";
 const SITE_NAME = "Reputation School Signature";
+const REPORT_PDF_PATH = "assets/pdfs/School_Signature_Drona_Branded_.pdf";
+const REPORT_PDF_FILENAME = "School_Signature_Drona_Branded_.pdf";
 
 function getAnonId(){
   const key = 'dronafy_anon_id';
@@ -991,37 +992,9 @@ document.getElementById('droneModalClose').addEventListener('click', () => { dro
 droneOverlay.addEventListener('click', (e) => { if(e.target === droneOverlay) droneOverlay.hidden = true; });
 
 function generatePdfBlob(){
-  return new Promise((resolve, reject) => {
-    const html = buildBrochureHtml();
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.left = '-99999px';
-    iframe.style.top = '0';
-    iframe.style.width = '820px';
-    iframe.style.height = '600px';
-    document.body.appendChild(iframe);
-    iframe.onload = () => {
-      const doc = iframe.contentDocument;
-      const ready = (doc.fonts && doc.fonts.ready) ? doc.fonts.ready : Promise.resolve();
-      ready.then(() => {
-        const target = doc.body;
-        html2pdf().set({
-          margin: 0,
-          filename: 'report.pdf',
-          image: { type: 'jpeg', quality: 0.95 },
-          html2canvas: { scale: 2, useCORS: true, windowWidth: 820 },
-          jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['css', 'legacy'] }
-        }).from(target).outputPdf('blob').then(blob => {
-          document.body.removeChild(iframe);
-          resolve(blob);
-        }).catch(err => {
-          document.body.removeChild(iframe);
-          reject(err);
-        });
-      });
-    };
-    iframe.srcdoc = html;
+  return fetch(REPORT_PDF_PATH).then(r => {
+    if(!r.ok) throw new Error('PDF fetch failed: ' + r.status);
+    return r.blob();
   });
 }
 
@@ -1059,7 +1032,7 @@ droneForm.addEventListener('submit', (e) => {
 
   generatePdfBlob().then(pdfBlob => {
     return blobToBase64(pdfBlob).then(base64 => {
-      const filename = SITE_NAME.replace(/\s+/g,'_') + '_Report';
+      const filename = REPORT_PDF_FILENAME.replace(/\.pdf$/i, '');
       const payload = {
         event: 'form_submit', site: SITE_NAME, page: location.href, anonId: ANON_ID, timestamp: new Date().toISOString(),
         name, school, email, phone, filename,
