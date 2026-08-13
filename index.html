@@ -6,6 +6,8 @@
 <title>School Signature — Dronalytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root{
     --ink-900:#101B33; --ink-800:#16233F;
@@ -19,6 +21,34 @@
   *{box-sizing:border-box;}
   body{margin:0;background:var(--paper);color:var(--ink-800);font-family:'Inter',sans-serif;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 20px 70px;}
+
+  /* ===== DRONA BRAND (per DRONA-BRAND-SPEC.md) ===== */
+  :root{
+    --drona-felt-0:#071A11; --drona-felt-1:#0F1F0F; --drona-felt-2:#0F1F0F;
+    --drona-gold:#C9A84C; --drona-gold-bright:#E0C673;
+    --drona-text:#ECE8DC; --drona-text-secondary:#A6BCAE;
+    --drona-line-gold:rgba(201,168,76,.22);
+    --drona-font-serif:'IBM Plex Serif',Georgia,serif;
+    --drona-font-sans:'IBM Plex Sans',system-ui,sans-serif;
+  }
+  .drona-nav{background:var(--drona-felt-0);padding:16px 28px;}
+  .drona-nav-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;}
+
+  .drona-hero{position:relative;overflow:hidden;background:var(--drona-felt-1);color:var(--drona-text);padding:80px 24px;text-align:center;font-variant-numeric:tabular-nums;}
+  .drona-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;height:auto;opacity:.10;pointer-events:none;}
+  .drona-hero-inner{position:relative;max-width:640px;margin:0 auto;}
+  .drona-hero h1{font-family:var(--drona-font-serif);font-weight:700;font-size:clamp(48px,8vw,88px);line-height:1.05;margin:0 0 18px;color:var(--drona-text);}
+  .drona-hero h1 .dot{color:var(--drona-gold);}
+  .drona-hero-sub{font-family:var(--drona-font-serif);font-style:italic;font-size:clamp(16px,2vw,20px);line-height:1.5;color:var(--drona-text-secondary);margin:0 0 34px;}
+  .drona-eyebrow{font-family:'IBM Plex Mono',monospace;font-weight:500;letter-spacing:.32em;font-size:11px;text-transform:uppercase;color:var(--drona-gold);}
+
+  .drona-explainer{background:var(--drona-felt-1);color:var(--drona-text);padding:72px 24px;text-align:center;font-variant-numeric:tabular-nums;}
+  .drona-explainer-inner{max-width:680px;margin:0 auto;}
+  .drona-explainer h2{font-family:var(--drona-font-serif);font-weight:600;font-size:clamp(24px,3.6vw,34px);line-height:1.28;margin:16px 0 18px;color:var(--drona-text);}
+  .drona-explainer h2 em{font-style:italic;color:var(--drona-gold-bright);font-weight:600;}
+  .drona-explainer p{font-family:var(--drona-font-sans);font-size:15px;line-height:1.65;color:var(--drona-text-secondary);margin:0 0 30px;}
+  .drona-scroll{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--drona-gold);text-decoration:none;border:1px solid var(--drona-line-gold);border-radius:24px;padding:9px 20px;display:inline-block;transition:background .15s ease;}
+  .drona-scroll:hover{background:rgba(201,168,76,.12);}
 
   /* ===== LETTERHEAD HEADER ===== */
   header.letterhead{
@@ -402,29 +432,63 @@
   }
   .section-chip.red{border-color:var(--rust);color:var(--rust);}
   .section-chip.amber{border-color:var(--amber);color:var(--amber);}
+
+  /* ===== GATE MODAL ===== */
+  .drona-modal-overlay{position:fixed;inset:0;background:rgba(4,10,6,.72);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;}
+  .drona-modal-overlay[hidden]{display:none;}
+  .drona-modal{background:var(--drona-felt-1);border:1px solid var(--drona-line-gold);border-radius:16px;max-width:420px;width:100%;padding:32px 28px;position:relative;color:var(--drona-text);font-family:var(--drona-font-sans);}
+  .drona-modal-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--drona-text-secondary);font-size:22px;cursor:pointer;line-height:1;padding:4px;}
+  .drona-modal-title{font-family:var(--drona-font-serif);font-weight:600;font-size:19px;line-height:1.3;margin:0 0 20px;color:var(--drona-text);}
+  .drona-field{display:block;margin-bottom:14px;}
+  .drona-field span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--drona-text-secondary);margin-bottom:6px;}
+  .drona-field input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--drona-line-gold);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--drona-text);font-family:inherit;box-sizing:border-box;}
+  .drona-field input:focus{outline:none;border-color:var(--drona-gold);}
+  .drona-field-hint{font-size:11.5px;color:var(--drona-text-secondary);margin:0 0 18px;}
+  .drona-modal-submit{width:100%;background:var(--drona-gold);color:#0F1F0F;border:none;border-radius:24px;padding:12px 20px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;transition:background .15s ease;}
+  .drona-modal-submit:hover{background:var(--drona-gold-bright);}
+  .drona-modal-submit:disabled{opacity:.6;cursor:default;}
+  .drona-modal-status{margin:12px 0 0;font-size:12.5px;color:var(--drona-text-secondary);min-height:16px;}
+  .drona-modal-status.error{color:#E08585;}
+  .drona-modal-status.success{color:var(--drona-gold-bright);}
 </style>
 </head>
 <body>
-<header class="letterhead">
-  <div class="lh-inner">
-    <div class="lh-left">
-      <div class="crest">G</div>
-      <div>
-        <h1>Greenwood International School</h1>
-        <div class="lh-sub">REPUTATION REPORT · MARCH 2026</div>
-      </div>
+<div class="drona-modal-overlay" id="droneOverlay" hidden>
+  <div class="drona-modal" role="dialog" aria-modal="true" aria-labelledby="droneModalTitle">
+    <button type="button" class="drona-modal-close" id="droneModalClose" aria-label="Close">&times;</button>
+    <div class="drona-eyebrow" style="margin-bottom:10px;">Before you download</div>
+    <h3 id="droneModalTitle" class="drona-modal-title">A few details, then the full report is yours.</h3>
+    <form id="droneForm" novalidate>
+      <label class="drona-field"><span>Name</span><input type="text" name="name" required></label>
+      <label class="drona-field"><span>School</span><input type="text" name="school" required></label>
+      <label class="drona-field"><span>Email</span><input type="email" name="email"></label>
+      <label class="drona-field"><span>Phone</span><input type="tel" name="phone"></label>
+      <p class="drona-field-hint">Provide at least one of email or phone — we'll send the report there.</p>
+      <button type="submit" class="drona-modal-submit" id="droneSubmitBtn">Get the report</button>
+      <p class="drona-modal-status" id="droneStatus"></p>
+    </form>
+  </div>
+</div>
+<nav class="drona-nav">
+  <div class="drona-nav-inner">
+    <img src="dronafy-mark.png" alt="Dronafy" style="width:26px;height:26px;flex-shrink:0;display:block;">
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <span style="font-family:var(--drona-font-serif);font-weight:600;font-size:15px;color:var(--drona-gold);line-height:1;">Dronafy</span>
+      <span style="font-family:var(--drona-font-sans);font-weight:400;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--drona-text-secondary);">An Altumind Venture</span>
     </div>
-    <div class="seal"><span class="dot"></span><span>Overall: On Track</span></div>
   </div>
-</header>
+</nav>
 
-<div class="wrap">
-
-  <div class="page-intro">
-    <div class="eyebrow">Reputation · Distinction</div>
-    <h2>What are we becoming known for?</h2>
-    <p>Three claims worth telling someone outside the school, the chart behind them, and one article ready to publish.</p>
+<section class="drona-hero drona-explainer">
+  <div class="drona-explainer-inner">
+    <div class="drona-eyebrow">Reputation · Distinction</div>
+    <h2>Every school says it's excellent — <em>this is the evidence, not the marketing.</em></h2>
+    <p>What can you actually point to that's distinctive? This view surfaces the competencies moving fastest, and the three claims worth telling outside the school.</p>
+    <a class="drona-scroll" href="#viz">See the School Signature ↓</a>
   </div>
+</section>
+
+<div class="wrap" id="viz">
 
   <!-- ================= REPUTATION: SIGNATURE ================= -->
   <div class="row3">
@@ -599,10 +663,187 @@ document.querySelectorAll('.article-card').forEach(card => {
 <script>
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+function REPORT_TEMPLATE(o){
+  const statTiles = o.stats.map(s => `<div class="pg-stat ${s.cls}"><div class="n">${s.n}</div><div class="l">${escapeHtml(s.l)}</div></div>`).join('');
+  const legendRows = o.legendItems.map(li => `<div class="pg-legend-item"><span class="pg-legend-dot ${li.cls}"></span><span><strong>${escapeHtml(li.label)}</strong> — ${escapeHtml(li.text)}</span></div>`).join('');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${escapeHtml(o.reportName)} — Dronalytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pg-bg:#0B1A12; --pg-card:#12261A; --pg-line:rgba(236,232,220,.12); --pg-line-gold:rgba(201,168,76,.28);
+    --pg-text:#ECE8DC; --pg-text-dim:#9FB0A5;
+    --pg-gold:#D8AC4C; --pg-gold-bright:#E9C878;
+    --pg-red:#C0726A; --pg-red-dim:rgba(192,114,106,.16);
+    --pg-amber:#D0A23C; --pg-amber-dim:rgba(208,162,60,.16);
+    --pg-slate:#7C93A8; --pg-slate-dim:rgba(124,147,168,.16);
+    --pg-green:#5FA47C; --pg-green-dim:rgba(95,164,124,.16);
+    --pg-light-card:#FBFBF8; --pg-light-ink:#101B33; --pg-light-slate:#5B6472; --pg-light-rule:#D8D4C4;
+  }
+  *{box-sizing:border-box;font-variant-numeric:tabular-nums;}
+  body{margin:0;background:var(--pg-bg);color:var(--pg-text);font-family:'IBM Plex Sans',sans-serif;}
+  .pg-page{max-width:820px;margin:0 auto;padding:40px 44px 56px;}
+  .pg-page.pg-page2{page-break-before:always;}
+  .pg-header{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--pg-line);padding-bottom:20px;margin-bottom:30px;gap:16px;flex-wrap:wrap;}
+  .pg-header-left .pg-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pg-gold);margin-bottom:8px;}
+  .pg-header-left h1{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:21px;margin:0;color:#fff;}
+  .pg-header-right{display:flex;align-items:center;gap:12px;}
+  .pg-badge-pill{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:var(--pg-gold);background:rgba(216,172,76,.12);border:1px solid var(--pg-line-gold);border-radius:20px;padding:6px 14px;white-space:nowrap;}
+  .pg-logo{width:26px;height:26px;flex-shrink:0;}
+
+  .pg-section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pg-gold);margin-bottom:12px;}
+  .pg-h2{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:25px;line-height:1.32;margin:0 0 14px;color:var(--pg-text);}
+  .pg-h2 em{font-style:italic;color:var(--pg-gold-bright);}
+  .pg-sub{font-size:14px;line-height:1.6;color:var(--pg-text-dim);max-width:600px;margin:0 0 26px;}
+
+  .pg-callout{background:var(--pg-card);border:1px solid var(--pg-line);border-radius:10px;padding:20px 24px;margin-bottom:28px;font-size:13.5px;line-height:1.75;color:var(--pg-text);}
+  .pg-callout strong{color:var(--pg-gold-bright);}
+
+  .pg-screenshot-wrap{background:var(--pg-card);border-radius:14px;padding:24px;margin-bottom:12px;}
+  .pg-shot-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .pg-shot-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pg-gold);background:rgba(216,172,76,.14);border-radius:20px;padding:3px 10px;}
+  .pg-shot-context{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pg-text-dim);}
+  .pg-screenshot-inner{background:var(--pg-light-card);border-radius:10px;padding:22px 24px;color:var(--pg-light-ink);}
+  .pg-screenshot-inner h3{font-family:'IBM Plex Serif',serif;font-weight:600;font-size:16px;margin:0 0 6px;color:var(--pg-light-ink);}
+  .pg-screenshot-inner p{font-size:12px;color:var(--pg-light-slate);margin:0 0 16px;}
+  .pg-screenshot-caption{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--pg-text-dim);text-transform:uppercase;margin:14px 0 30px;}
+
+  .pg-heat{border-collapse:separate;border-spacing:6px;width:100%;}
+  .pg-heat th{font-size:10px;color:var(--pg-light-slate);font-weight:600;padding:2px;text-align:center;}
+  .pg-rowlabel{text-align:right;padding-right:8px;font-size:11px;font-weight:600;color:var(--pg-light-slate);white-space:nowrap;}
+  .pg-cell{border-radius:8px;height:30px;text-align:center;vertical-align:middle;font-size:10px;letter-spacing:1px;color:#fff;}
+  .pg-cell-quiet{background:#E4E8E1;color:#B7BAC0;}
+  .pg-cell-immediate{background:var(--pg-red);}
+  .pg-cell-thisweek{background:var(--pg-amber);}
+  .pg-cell-monitor{background:#8FA6B8;}
+  .pg-shot-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--pg-light-slate);}
+  .pg-shot-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .pg-dot{width:9px;height:9px;border-radius:2px;display:inline-block;}
+  .pg-dot.immediate{background:var(--pg-red);} .pg-dot.thisweek{background:var(--pg-amber);} .pg-dot.monitor{background:#8FA6B8;} .pg-dot.quiet{background:#E4E8E1;}
+
+  .pg-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px;}
+  @media (max-width:600px){.pg-stats{grid-template-columns:repeat(2,1fr);}}
+  .pg-stat{background:var(--pg-card);border-radius:10px;padding:18px 12px;text-align:center;}
+  .pg-stat .n{font-family:'IBM Plex Serif',serif;font-weight:700;font-size:28px;}
+  .pg-stat .l{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--pg-text-dim);margin-top:4px;}
+  .pg-stat.red .n{color:var(--pg-red);} .pg-stat.amber .n{color:var(--pg-amber);} .pg-stat.slate .n{color:var(--pg-slate);} .pg-stat.green .n{color:var(--pg-green);} .pg-stat.gold .n{color:var(--pg-gold);}
+
+  .pg-axis-row{display:grid;grid-template-columns:130px 1fr 100px;align-items:center;gap:10px;margin-bottom:10px;font-size:11px;}
+  .pg-axis-label{color:var(--pg-light-ink);}
+  .pg-axis-track{position:relative;background:var(--pg-light-rule);border-radius:6px;height:8px;overflow:hidden;}
+  .pg-axis-fill-jan{position:absolute;top:0;left:0;height:100%;background:var(--pg-light-slate);opacity:.5;}
+  .pg-axis-fill-mar{position:absolute;top:0;left:0;height:100%;background:var(--pg-gold);}
+  .pg-axis-vals{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--pg-light-slate);text-align:right;}
+  .pg-axis-growth{color:#3E8A5E;}
+
+  .pg-band-row{display:grid;grid-template-columns:110px 1fr 90px;align-items:center;gap:10px;margin-bottom:10px;font-size:11px;}
+  .pg-band-label{color:var(--pg-light-ink);}
+  .pg-band-track{background:var(--pg-light-rule);border-radius:6px;height:8px;overflow:hidden;}
+  .pg-band-fill{height:100%;border-radius:6px;}
+  .pg-band-fill.strong{background:#2F5D45;} .pg-band-fill.competent{background:#5C8F71;} .pg-band-fill.developing{background:var(--pg-amber);} .pg-band-fill.emerging{background:var(--pg-red);}
+  .pg-band-val{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--pg-light-slate);text-align:right;}
+
+  .pg-legend-box{background:var(--pg-card);border-radius:10px;padding:20px 24px;}
+  .pg-legend-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--pg-text-dim);text-transform:uppercase;margin-bottom:14px;}
+  .pg-legend-item{display:flex;gap:10px;font-size:12.5px;line-height:1.6;color:var(--pg-text-dim);margin-bottom:10px;}
+  .pg-legend-item:last-child{margin-bottom:0;}
+  .pg-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+  .pg-legend-dot.red{background:var(--pg-red);} .pg-legend-dot.amber{background:var(--pg-amber);} .pg-legend-dot.slate{background:var(--pg-slate);} .pg-legend-dot.green{background:var(--pg-green);} .pg-legend-dot.gold{background:var(--pg-gold);}
+  .pg-legend-item strong{color:var(--pg-text);}
+
+  .pg-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .pg-badge.immediate,.pg-badge.red{color:var(--pg-red);background:var(--pg-red-dim);}
+  .pg-badge.thisweek,.pg-badge.amber{color:var(--pg-amber);background:var(--pg-amber-dim);}
+  .pg-badge.monitor,.pg-badge.slate{color:var(--pg-slate);background:var(--pg-slate-dim);}
+  .pg-badge.green{color:var(--pg-green);background:var(--pg-green-dim);}
+  .pg-badge.gold{color:var(--pg-gold);background:rgba(216,172,76,.16);}
+
+  .pg-flag-card{background:var(--pg-card);border-radius:12px;padding:20px 22px;margin-bottom:14px;}
+  .pg-flag-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+  .pg-flag-context{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--pg-text-dim);}
+  .pg-flag-headline{font-size:14.5px;line-height:1.55;color:var(--pg-text);margin:0 0 10px;}
+  .pg-flag-step{font-size:12.5px;line-height:1.6;color:var(--pg-text-dim);margin:0;}
+  .pg-flag-step strong{color:var(--pg-text);}
+
+  .pg-closing{border-top:1px solid var(--pg-line);margin-top:26px;padding-top:24px;text-align:center;}
+  .pg-closing p{font-family:'IBM Plex Serif',serif;font-style:italic;font-size:14.5px;color:var(--pg-gold-bright);margin:0;}
+  .pg-footer{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--pg-text-dim);letter-spacing:.04em;margin-top:26px;}
+</style>
+</head>
+<body>
+<div class="pg-page">
+  <div class="pg-header">
+    <div class="pg-header-left">
+      <div class="pg-eyebrow">Dronalytics · School Pretotype</div>
+      <h1>${escapeHtml(o.reportName)} — March 2026</h1>
+    </div>
+    <div class="pg-header-right">
+      <span class="pg-badge-pill">${escapeHtml(o.badgeText)}</span>
+      <img class="pg-logo" src="dronafy-mark.png" alt="">
+    </div>
+  </div>
+
+  <div class="pg-section-eyebrow">${escapeHtml(o.summaryEyebrow)}</div>
+  <h2 class="pg-h2">${o.headline}</h2>
+  <p class="pg-sub">${escapeHtml(o.subhead)}</p>
+
+  <div class="pg-callout">${o.calloutHtml}</div>
+
+  <div class="pg-screenshot-wrap">
+    <div class="pg-shot-head">
+      <span class="pg-shot-tag">${escapeHtml(o.screenshotEyebrow)}</span>
+      <span class="pg-shot-context">${escapeHtml(o.reportName)}</span>
+    </div>
+    <div class="pg-screenshot-inner">
+      <h3>${escapeHtml(o.screenshotTitle)}</h3>
+      <p>${escapeHtml(o.screenshotSub)}</p>
+      ${o.screenshotBodyHtml}
+      ${o.screenshotLegendHtml || ''}
+    </div>
+  </div>
+  <div class="pg-screenshot-caption">${escapeHtml(o.screenshotCaption)}</div>
+
+  <div class="pg-stats">${statTiles}</div>
+
+  <div class="pg-legend-box">
+    <div class="pg-legend-title">How to read this report</div>
+    ${legendRows}
+  </div>
+</div>
+
+<div class="pg-page pg-page2">
+  <div class="pg-header">
+    <div class="pg-header-left">
+      <div class="pg-eyebrow">Dronalytics · School Pretotype</div>
+      <h1>${escapeHtml(o.reportName)} — March 2026</h1>
+    </div>
+    <div class="pg-header-right">
+      <img class="pg-logo" src="dronafy-mark.png" alt="">
+    </div>
+  </div>
+
+  <h2 class="pg-h2" style="font-size:22px;">${escapeHtml(o.flaggedTitle)}</h2>
+  <p class="pg-sub">${escapeHtml(o.flaggedSub)}</p>
+
+  ${o.flaggedCardsHtml}
+
+  <div class="pg-closing">
+    <p>${escapeHtml(o.closingQuote)}</p>
+  </div>
+  <div class="pg-footer">${escapeHtml(o.footerText)}</div>
+</div>
+</body>
+</html>`;
+}
+
 const insights = [
-  {tag:"Current Strength", glyph:"★", title:"Core Knowledge", rank:"Reaches furthest out of all six points on the chart", desc:"Students are consistently strongest on foundational recall and understanding — the base the other five areas build on."},
-  {tag:"Fastest Growing", glyph:"↑", title:"Judgment & Reasoning", rank:"Widest gap between the dashed and solid line", desc:"The single largest jump on the chart since January — students are visibly getting better at weighing evidence and making calls, not just recalling facts."},
-  {tag:"Becoming Distinctive", glyph:"✦", title:"Creativity & Innovation", rank:"Second-widest gap, on an axis few schools even track", desc:"Rare for a school to see this much movement here — worth owning before another school claims the same story with less evidence."}
+  {tag:"Current Strength", cls:"green", glyph:"★", title:"Core Knowledge", rank:"Reaches furthest out of all six points on the chart", desc:"Students are consistently strongest on foundational recall and understanding — the base the other five areas build on."},
+  {tag:"Fastest Growing", cls:"gold", glyph:"↑", title:"Judgment & Reasoning", rank:"Widest gap between the dashed and solid line", desc:"The single largest jump on the chart since January — students are visibly getting better at weighing evidence and making calls, not just recalling facts."},
+  {tag:"Becoming Distinctive", cls:"amber", glyph:"✦", title:"Creativity & Innovation", rank:"Second-widest gap, on an axis few schools even track", desc:"Rare for a school to see this much movement here — worth owning before another school claims the same story with less evidence."}
 ];
 
 const article = {
@@ -611,26 +852,26 @@ const article = {
   full: "We're not claiming credit for all of it — some of this is simply students growing up. But the pattern across all three areas points to something intentional: less rote recall, more open-ended thinking, and more room for judgment calls in daily lessons. We'll be watching to see if this holds through the next assessment cycle, and we'll share what we find either way."
 };
 
-function brochureAxisRow(label, janVal, marVal){
-  const growth = marVal - janVal;
-  return `
-    <div class="b-axis-row">
-      <span class="b-axis-label">${escapeHtml(label)}</span>
-      <div class="b-axis-track">
-        <div class="b-axis-fill-jan" style="width:${janVal}%;"></div>
-        <div class="b-axis-fill-mar" style="width:${marVal}%;"></div>
-      </div>
-      <span class="b-axis-vals">${janVal} &rarr; ${marVal} <span class="b-axis-growth">(+${growth})</span></span>
+function screenshotAxisHtml(){
+  return labels.map((l,i) => {
+    const g = mar[i] - jan[i];
+    return `<div class="pg-axis-row">
+      <span class="pg-axis-label">${escapeHtml(l)}</span>
+      <div class="pg-axis-track"><div class="pg-axis-fill-jan" style="width:${jan[i]}%;"></div><div class="pg-axis-fill-mar" style="width:${mar[i]}%;"></div></div>
+      <span class="pg-axis-vals">${jan[i]} &rarr; ${mar[i]} <span class="pg-axis-growth">(+${g})</span></span>
     </div>`;
+  }).join('');
 }
 
-function brochureInsightCard(ins){
+function flagCardHtml(ins){
   return `
-    <article class="b-card gold">
-      <div class="b-card-head"><span class="b-badge gold">${escapeHtml(ins.tag)}</span></div>
-      <h3>${ins.glyph} ${escapeHtml(ins.title)}</h3>
-      <p class="b-rank">${escapeHtml(ins.rank)}</p>
-      <p class="b-detail">${escapeHtml(ins.desc)}</p>
+    <article class="pg-flag-card">
+      <div class="pg-flag-head">
+        <span class="pg-badge ${ins.cls}">${escapeHtml(ins.tag)}</span>
+        <span class="pg-flag-context">${ins.glyph} ${escapeHtml(ins.title)}</span>
+      </div>
+      <p class="pg-flag-headline">${escapeHtml(ins.rank)}</p>
+      <p class="pg-flag-step"><strong>Suggested next step:</strong> ${escapeHtml(ins.desc)}</p>
     </article>`;
 }
 
@@ -639,120 +880,222 @@ function buildBrochureHtml(){
   const avgGrowth = (growth.reduce((a,g)=>a+g,0) / growth.length).toFixed(1);
   const maxIdx = growth.indexOf(Math.max(...growth));
   const minIdx = growth.indexOf(Math.min(...growth));
-  const execSummary = `Every one of the six areas the School Signature tracks grew between January and March — an average gain of ${avgGrowth} points. ${escapeHtml(labels[maxIdx])} grew the most, up ${growth[maxIdx]} points, while ${escapeHtml(labels[minIdx])} grew the least, up ${growth[minIdx]}. ${escapeHtml(insights[0].title)} remains the strongest area outright, and the three claims below are the ones most worth telling someone outside the school.`;
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Greenwood International School — Reputation Report Brochure</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink-900:#101B33; --ink-800:#16233F;
-    --paper:#EEF1EA; --card:#FBFBF8;
-    --gold:#B98B2E; --gold-bright:#D8AC4C;
-    --forest:#2F5D45; --forest-dim:#DCE6DD;
-    --slate:#5B6472; --rule:#D8D4C4;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink-800);font-family:'Inter',sans-serif;}
-  .b-wrap{max-width:900px;margin:0 auto;padding:0 24px 60px;}
-  header.b-letterhead{background:var(--ink-900);color:#EDEFEA;padding:40px 24px;margin-bottom:32px;}
-  .b-lh-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
-  .b-crest{width:56px;height:56px;border-radius:50%;border:2px solid var(--gold-bright);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;font-size:22px;color:var(--gold-bright);flex-shrink:0;}
-  header.b-letterhead h1{font-family:'Fraunces',serif;font-weight:500;font-size:24px;margin:0;color:#fff;}
-  header.b-letterhead .b-lh-sub{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA3B5;letter-spacing:.08em;margin-top:4px;}
-  .b-print{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#EDEFEA;background:transparent;border:1px solid rgba(216,172,76,.4);border-radius:20px;padding:8px 16px;cursor:pointer;}
-  .b-print:hover{background:rgba(216,172,76,.12);}
-  .b-intro{text-align:center;margin-bottom:40px;}
-  .b-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-  .b-intro h2{font-family:'Fraunces',serif;font-weight:500;font-size:28px;margin:0 0 10px;color:var(--ink-900);}
-  .b-intro p{font-size:14.5px;color:var(--slate);max-width:640px;margin:0 auto;line-height:1.6;}
-  .b-exec-summary{background:var(--card);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:16px 20px;font-size:13.5px;line-height:1.65;color:var(--ink-800);margin:0 0 8px;}
-  .b-section-title{display:flex;align-items:baseline;gap:10px;margin:44px 0 4px;}
-  .b-section-title h2{font-family:'Fraunces',serif;font-weight:500;font-size:20px;margin:0;color:var(--ink-900);}
-  .b-section-desc{font-size:13px;color:var(--slate);line-height:1.6;margin:0 0 18px;max-width:640px;}
-  .b-card{background:var(--card);border-radius:14px;border-top:4px solid var(--rule);box-shadow:0 1px 2px rgba(16,27,51,.05), 0 8px 24px rgba(16,27,51,.06);padding:24px 26px 22px;margin-bottom:20px;}
-  .b-card.gold{border-top-color:var(--gold);}
-  .b-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
-  .b-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
-  .b-badge.gold{color:var(--gold);background:#F3E6C8;}
-  .b-card h3{font-family:'Fraunces',serif;font-weight:500;font-size:19px;margin:0 0 6px;color:var(--ink-900);}
-  .b-rank{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.02em;color:var(--gold);margin:0 0 10px;}
-  .b-detail{font-size:13.5px;line-height:1.6;color:var(--ink-800);margin:0;}
-  .b-axis-row{display:grid;grid-template-columns:150px 1fr 120px;align-items:center;gap:12px;margin-bottom:12px;font-size:12.5px;}
-  .b-axis-label{color:var(--ink-800);}
-  .b-axis-track{position:relative;background:var(--rule);border-radius:6px;height:10px;overflow:hidden;}
-  .b-axis-fill-jan{position:absolute;top:0;left:0;height:100%;background:var(--slate);opacity:.5;}
-  .b-axis-fill-mar{position:absolute;top:0;left:0;height:100%;background:var(--gold);}
-  .b-axis-vals{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);text-align:right;}
-  .b-axis-growth{color:var(--forest);}
-  .b-article{background:var(--card);border-radius:14px;border-top:4px solid var(--gold);box-shadow:0 1px 2px rgba(16,27,51,.05), 0 8px 24px rgba(16,27,51,.06);padding:26px 28px;margin-bottom:20px;}
-  .b-article .b-headline{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin:0 0 12px;color:var(--ink-900);}
-  .b-article p{font-size:13.5px;line-height:1.65;color:var(--ink-800);margin:0 0 14px;}
-  .b-article p:last-child{margin-bottom:0;}
-  .b-closing{margin-top:44px;padding-top:24px;border-top:1px solid var(--rule);text-align:center;}
-  .b-closing p{font-size:13px;color:var(--slate);max-width:560px;margin:0 auto;line-height:1.6;}
-  footer.b-footer{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--slate);letter-spacing:.04em;margin-top:36px;}
-  @media print{.b-print{display:none;}}
-</style>
-</head>
-<body>
-<header class="b-letterhead">
-  <div class="b-lh-inner">
-    <div style="display:flex;align-items:center;gap:16px;">
-      <div class="b-crest">G</div>
-      <div>
-        <h1>Greenwood International School</h1>
-        <div class="b-lh-sub">REPUTATION REPORT · DETAILED BROCHURE · MARCH 2026</div>
-      </div>
-    </div>
-    <button class="b-print" onclick="window.print()">Print / Save as PDF</button>
-  </div>
-</header>
 
-<div class="b-wrap">
-  <div class="b-intro">
-    <div class="b-eyebrow">Reputation · Distinction — Full Detail</div>
-    <h2>What are we becoming known for?</h2>
-    <p>The full School Signature — every one of the six competencies compared January to March, the three claims worth telling someone outside the school, and the article ready to publish.</p>
-  </div>
-
-  <p class="b-exec-summary">${execSummary}</p>
-
-  <div class="b-section-title"><h2>School Signature, Axis by Axis</h2></div>
-  <p class="b-section-desc">January versus March, for each of the six competencies the Signature tracks. The gold bar is where the school stands now; the growth in brackets is how far it moved this term.</p>
-  <div class="b-card gold">
-    ${labels.map((l,i) => brochureAxisRow(l, jan[i], mar[i])).join('')}
-  </div>
-
-  <div class="b-section-title"><h2>Three Claims Worth Telling</h2></div>
-  <p class="b-section-desc">The three data points from the chart above that are most worth repeating outside the school — to parents, prospective families, or the board.</p>
-  ${insights.map(brochureInsightCard).join('')}
-
-  <div class="b-section-title"><h2>Suggested Draft</h2></div>
-  <p class="b-section-desc">A ready-to-publish piece built from the three claims above — for the school blog, a newsletter, or LinkedIn.</p>
-  <div class="b-article">
-    <p class="b-headline">${escapeHtml(article.headline)}</p>
-    <p>${escapeHtml(article.excerpt)}</p>
-    <p>${escapeHtml(article.full)}</p>
-  </div>
-
-  <div class="b-closing">
-    <p>This brochure was generated from the same School Signature data shown on the dashboard — the radar chart, the three insight cards, and the suggested draft all trace back to the January-to-March scores above.</p>
-  </div>
-  <footer class="b-footer">Sample data · Greenwood International School · March 2026 — Dronalytics School Pretotype</footer>
-</div>
-</body>
-</html>`;
+  return REPORT_TEMPLATE({
+    reportName: "Monthly Signature Report",
+    eyebrowTag: "Reputation · Distinction",
+    badgeText: `${insights.length} claims worth telling`,
+    summaryEyebrow: "For the principal — plain-language summary",
+    headline: `Every school says it's excellent — <em>this is the evidence, not the marketing.</em>`,
+    subhead: "What can you actually point to that's distinctive? This view surfaces the competencies moving fastest, and the three claims worth telling outside the school.",
+    calloutHtml: `Every one of the <strong>${labels.length} competencies</strong> the School Signature tracks grew between January and March — an average gain of <strong>${avgGrowth} points</strong>. <strong>${escapeHtml(labels[maxIdx])}</strong> grew the most, up ${growth[maxIdx]} points, while ${escapeHtml(labels[minIdx])} grew the least, up ${growth[minIdx]}. <strong>${escapeHtml(insights[0].title)}</strong> remains the strongest area outright.`,
+    screenshotEyebrow: "Reputation · Distinction",
+    screenshotTitle: "How each competency moved, January to March",
+    screenshotSub: "Same six axes as the School Signature chart — gold is where the school stands now.",
+    screenshotBodyHtml: screenshotAxisHtml(),
+    screenshotLegendHtml: `<div class="pg-shot-legend">
+        <span><span class="pg-dot" style="background:var(--pg-light-rule);"></span>January</span>
+        <span><span class="pg-dot" style="background:var(--pg-gold);"></span>March</span>
+      </div>`,
+    screenshotCaption: "This is the actual School Signature chart your team sees — one row per competency",
+    stats: [
+      {n: labels.length, l: "Competencies tracked", cls: "slate"},
+      {n: `+${avgGrowth}`, l: "Average growth (pts)", cls: "green"},
+      {n: `+${growth[maxIdx]}`, l: "Best mover (pts)", cls: "gold"},
+      {n: insights.length, l: "Claims worth telling", cls: "amber"}
+    ],
+    legendItems: [
+      {cls:"green", label:"Current Strength", text:"the competency that's furthest ahead of the other five right now."},
+      {cls:"gold", label:"Fastest Growing", text:"the biggest jump since January — accelerating quicker than anything else tracked."},
+      {cls:"amber", label:"Becoming Distinctive", text:"a rare pattern worth owning before another school claims the same story."},
+      {cls:"slate", label:"Everything else", text:"steady and moving in the right direction — just not this month's headline."}
+    ],
+    flaggedTitle: `The ${insights.length} claims worth telling, explained simply`,
+    flaggedSub: "Ordered by how distinctive they are. Each one includes why it matters and what to do with it.",
+    flaggedCardsHtml: insights.map(flagCardHtml).join(''),
+    closingQuote: `${labels[maxIdx]} is growing fastest, and ${insights[0].title} remains the strongest claim — both are worth telling before another school gets there first.`,
+    footerText: "Sample data · Greenwood International School · March 2026 — Dronalytics School Pretotype"
+  });
 }
 
+const TRACKING_ENDPOINT = "https://script.google.com/macros/s/AKfycbzTpgc26W31atjZaDKxp_LpxwN3nJM6bi-3udQrGmP_9o9On1Ac0zQUBlpE9JDYVxzY-g/exec";
+const SITE_NAME = "Reputation School Signature";
+
+function getAnonId(){
+  const key = 'dronafy_anon_id';
+  let id = localStorage.getItem(key);
+  if(!id){
+    id = 'anon_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+const ANON_ID = getAnonId();
+
+function trackEvent(eventName, extra){
+  if(!TRACKING_ENDPOINT) return;
+  const payload = Object.assign({event:eventName, site:SITE_NAME, page:location.href, anonId:ANON_ID, timestamp:new Date().toISOString()}, extra||{});
+  fetch(TRACKING_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)}).catch(()=>{});
+}
+
+function trackBeacon(eventName, extra){
+  if(!TRACKING_ENDPOINT) return;
+  const payload = Object.assign({event:eventName, site:SITE_NAME, page:location.href, anonId:ANON_ID, timestamp:new Date().toISOString()}, extra||{});
+  if(navigator.sendBeacon){
+    navigator.sendBeacon(TRACKING_ENDPOINT, new Blob([JSON.stringify(payload)], {type:'text/plain;charset=utf-8'}));
+  } else {
+    trackEvent(eventName, extra);
+  }
+}
+
+trackEvent('page_view');
+
+(function(){
+  const milestones = [25, 50, 75, 100];
+  const fired = {};
+  function checkScroll(){
+    const doc = document.documentElement;
+    const scrollTop = window.pageYOffset || doc.scrollTop;
+    const scrollable = (doc.scrollHeight - doc.clientHeight) || 1;
+    const pct = Math.min(100, Math.round((scrollTop / scrollable) * 100));
+    milestones.forEach(m => {
+      if(pct >= m && !fired[m]){
+        fired[m] = true;
+        trackEvent('scroll_depth', {value: m});
+      }
+    });
+  }
+  window.addEventListener('scroll', checkScroll, {passive: true});
+})();
+
+const pageLoadTime = Date.now();
+function sendTimeOnPage(){
+  trackBeacon('time_on_page', {value: Math.round((Date.now() - pageLoadTime) / 1000)});
+}
+window.addEventListener('pagehide', sendTimeOnPage);
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') sendTimeOnPage(); });
+
+const droneOverlay = document.getElementById('droneOverlay');
+const droneForm = document.getElementById('droneForm');
+const droneStatus = document.getElementById('droneStatus');
+const droneSubmitBtn = document.getElementById('droneSubmitBtn');
+
 document.getElementById('dlDoc2').addEventListener('click', () => {
-  const html = buildBrochureHtml();
-  const blobUrl = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
-  window.open(blobUrl, '_blank');
+  trackEvent('cta_click');
+  droneOverlay.hidden = false;
+  droneStatus.textContent = '';
+  droneStatus.className = 'drona-modal-status';
+});
+document.getElementById('droneModalClose').addEventListener('click', () => { droneOverlay.hidden = true; });
+droneOverlay.addEventListener('click', (e) => { if(e.target === droneOverlay) droneOverlay.hidden = true; });
+
+function generatePdfBlob(){
+  return new Promise((resolve, reject) => {
+    const html = buildBrochureHtml();
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.left = '-99999px';
+    iframe.style.top = '0';
+    iframe.style.width = '820px';
+    iframe.style.height = '600px';
+    document.body.appendChild(iframe);
+    iframe.onload = () => {
+      const doc = iframe.contentDocument;
+      const ready = (doc.fonts && doc.fonts.ready) ? doc.fonts.ready : Promise.resolve();
+      ready.then(() => {
+        const target = doc.body;
+        html2pdf().set({
+          margin: 0,
+          filename: 'report.pdf',
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 2, useCORS: true, windowWidth: 820 },
+          jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'] }
+        }).from(target).outputPdf('blob').then(blob => {
+          document.body.removeChild(iframe);
+          resolve(blob);
+        }).catch(err => {
+          document.body.removeChild(iframe);
+          reject(err);
+        });
+      });
+    };
+    iframe.srcdoc = html;
+  });
+}
+
+function blobToBase64(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+droneForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const fd = new FormData(droneForm);
+  const name = (fd.get('name')||'').trim();
+  const school = (fd.get('school')||'').trim();
+  const email = (fd.get('email')||'').trim();
+  const phone = (fd.get('phone')||'').trim();
+
+  if(!name || !school){
+    droneStatus.textContent = 'Please fill in your name and school.';
+    droneStatus.className = 'drona-modal-status error';
+    return;
+  }
+  if(!email && !phone){
+    droneStatus.textContent = 'Please provide an email or phone number.';
+    droneStatus.className = 'drona-modal-status error';
+    return;
+  }
+
+  droneSubmitBtn.disabled = true;
+  droneStatus.textContent = 'Preparing your report…';
+  droneStatus.className = 'drona-modal-status';
+
+  generatePdfBlob().then(pdfBlob => {
+    return blobToBase64(pdfBlob).then(base64 => {
+      const filename = SITE_NAME.replace(/\s+/g,'_') + '_Report';
+      const payload = {
+        event: 'form_submit', site: SITE_NAME, page: location.href, anonId: ANON_ID, timestamp: new Date().toISOString(),
+        name, school, email, phone, filename,
+        pdfBase64: base64
+      };
+      const sendPromise = TRACKING_ENDPOINT
+        ? fetch(TRACKING_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)}).then(r => r.json()).catch(() => ({ok:false}))
+        : Promise.resolve({ok:false});
+
+      return sendPromise.then(result => {
+        const dlUrl = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = dlUrl;
+        a.download = filename + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        if(result && result.emailSent){
+          droneStatus.textContent = 'Downloaded — and a copy is on its way to your email.';
+        } else if(email){
+          droneStatus.textContent = "Downloaded. (Email delivery isn't connected yet — you have the file directly.)";
+        } else {
+          droneStatus.textContent = 'Downloaded.';
+        }
+        droneStatus.className = 'drona-modal-status success';
+        setTimeout(() => { droneOverlay.hidden = true; droneForm.reset(); droneSubmitBtn.disabled = false; }, 1800);
+      });
+    });
+  }).catch(err => {
+    console.error(err);
+    droneStatus.textContent = 'Something went wrong generating the PDF. Please try again.';
+    droneStatus.className = 'drona-modal-status error';
+    droneSubmitBtn.disabled = false;
+  });
 });
 </script>
+
 </body>
 </html>
